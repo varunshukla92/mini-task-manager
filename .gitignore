@@ -1,0 +1,25 @@
+# Build output
+bin/
+obj/
+
+# Visual Studio
+.vs/
+
+# Visual Studio publish profiles & Azure deployment artifacts
+**/Properties/PublishProfiles/
+**/Properties/ServiceDependencies/
+
+# User-specific files
+*.user
+*.suo
+
+# Logs
+*.log
+
+# Secrets
+appsettings.Development.json
+appsettings.Local.json
+*.publishsettings
+
+# OS
+.DS_Store
