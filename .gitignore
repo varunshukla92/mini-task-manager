@@ -12,6 +12,7 @@ obj/
 # User-specific files
 *.user
 *.suo
+*.http
 
 # Logs
 *.log
