@@ -25,5 +25,4 @@ jobs:
       run: dotnet build --configuration Release --no-restore
 
     - name: Publish AuthService
-      run: dotnet publish AuthService.API/AuthService.API.csproj -c Release -o ./publish
-      
+      run: dotnet publish ./AuthService.API/AuthService.API.csproj -c Release -o ./publish
