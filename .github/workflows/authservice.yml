@@ -25,7 +25,7 @@ jobs:
       run: dotnet build --configuration Release --no-restore
 
     - name: Publish AuthService
-      run: dotnet publish ./src/AuthService/AuthService.API/AuthService.API.csproj -c Release -o ./publish
+      run: dotnet publish ./src/AuthService/AuthService.API/AuthService.API.csproj -c Release -o ./publish --no-self-contained
 
     - name: Deploy to Azure App Service
       uses: azure/webapps-deploy@v3
