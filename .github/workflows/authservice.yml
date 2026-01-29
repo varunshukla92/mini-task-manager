@@ -27,3 +27,11 @@ jobs:
     - name: Publish AuthService
       run: dotnet publish ./src/AuthService/AuthService.API/AuthService.API.csproj -c Release -o ./publish
 
+    - name: Deploy to Azure App Service
+      uses: azure/webapps-deploy@v3
+      with:
+        app-name: mini-jira-auth-api
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+        package: ./publish
+
+
