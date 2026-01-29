@@ -57,7 +57,6 @@ public class TasksController : ControllerBase
 
     [HttpGet("GetAll")]
     public async Task<IActionResult> GetAllTask(
-        Guid id,
         CancellationToken cancellationToken)
     {
         var userId = User.GetUserId();
