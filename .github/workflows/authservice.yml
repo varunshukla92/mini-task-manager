@@ -1,4 +1,4 @@
-name: Build AuthService
+name: Build & Deploy AuthService
 
 on:
   push:
