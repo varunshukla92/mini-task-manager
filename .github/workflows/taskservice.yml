@@ -29,3 +29,10 @@ jobs:
 
     - name: Publish TaskService
       run: dotnet publish ./src/TaskService/TaskService.API/TaskService.API.csproj -c Release -o ./publish --no-self-contained
+
+    - name: Deploy to Azure App Service
+      uses: azure/webapps-deploy@v3
+      with:
+        app-name: mini-jira-task-api   
+        publish-profile: ${{ secrets.AZURE_TASKSERVICE_PUBLISH_PROFILE }}
+        package: ./publish
