@@ -22,5 +22,8 @@ appsettings.Development.json
 appsettings.Local.json
 *.publishsettings
 
+# Test results
+TestResults/
+
 # OS
 .DS_Store

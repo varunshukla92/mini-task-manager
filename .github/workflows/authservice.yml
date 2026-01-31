@@ -27,6 +27,9 @@ jobs:
     - name: Build solution
       run: dotnet build --configuration Release --no-restore
 
+    - name: Run unit tests
+      run: dotnet test --configuration Release --no-build
+
     - name: Publish AuthService
       run: dotnet publish ./src/AuthService/AuthService.API/AuthService.API.csproj -c Release -o ./publish --no-self-contained
 
