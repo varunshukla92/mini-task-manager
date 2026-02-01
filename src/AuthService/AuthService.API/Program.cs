@@ -4,6 +4,7 @@ using AuthService.Application;
 using AuthService.Application.Options;
 using AuthService.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -113,6 +114,15 @@ builder.Services.AddSwaggerGen(options =>
 // Phase 4: Build & Pipeline
 
 var app = builder.Build();
+
+// Configure forwarded header for APIM
+
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders =
+        ForwardedHeaders.XForwardedFor |
+        ForwardedHeaders.XForwardedProto
+});
 
 app.UseSwagger();
 app.UseSwaggerUI();
