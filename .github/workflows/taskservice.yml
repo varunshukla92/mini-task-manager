@@ -27,6 +27,9 @@ jobs:
     - name: Build
       run: dotnet build --configuration Release --no-restore
 
+    - name: Run unit tests
+      run: dotnet test --configuration Release --no-build
+
     - name: Publish TaskService
       run: dotnet publish ./src/TaskService/TaskService.API/TaskService.API.csproj -c Release -o ./publish --no-self-contained
 
