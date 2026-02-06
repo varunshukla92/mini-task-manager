@@ -5,8 +5,7 @@ using AuthService.Application.Options;
 using AuthService.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Logging.Console;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -17,6 +16,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.Configure<JwtOptions>(
     builder.Configuration.GetSection("Jwt"));
+
+// Setting up logger
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole(options =>
+{
+    options.FormatterName = ConsoleFormatterNames.Json;
+});
 
 // Phase 2: Infrastructure & App Services
 
@@ -129,6 +135,7 @@ app.UseSwaggerUI();
 
 // Exception Handling Middleware
 app.UseMiddleware<ExceptionHandlingMiddleware>(); 
+app.UseMiddleware<CorrelationIdMiddleware>();
 
 app.UseAuthentication();
 app.UseAuthorization();
