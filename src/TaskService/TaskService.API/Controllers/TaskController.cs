@@ -14,10 +14,12 @@ namespace TaskService.API.Controllers;
 public class TasksController : ControllerBase
 {
     private readonly ITaskService _taskService;
+    private readonly ILogger<TasksController> _logger;
 
-    public TasksController(ITaskService taskService)
+    public TasksController(ITaskService taskService, ILogger<TasksController> logger)
     {
         _taskService = taskService;
+        _logger = logger;
     }
 
     [HttpPost]
@@ -26,11 +28,11 @@ public class TasksController : ControllerBase
         CancellationToken cancellationToken)
     {
         var userId = User.GetUserId();
+        _logger.LogInformation("Task creation started for userId {UserId}", userId);
 
-        var task = await _taskService.CreateAsync(
-            userId,
-            request,
-            cancellationToken);
+        var task = await _taskService.CreateAsync(userId, request, cancellationToken);
+
+        _logger.LogInformation("Task creation successful for userId {UserId}, taskId {TaskId}", userId, task.Id);
 
         return CreatedAtAction(
             nameof(GetById),
@@ -39,64 +41,57 @@ public class TasksController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
-    public async Task<IActionResult> GetById(
-        Guid id,
-        CancellationToken cancellationToken)
+    public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
     {
         var userId = User.GetUserId();
+        _logger.LogInformation("Fetching task {TaskId} for userId {UserId}", id, userId);
 
-        var task = await _taskService.GetByIdAsync(
-            userId,
-            id,
-            cancellationToken);
+        var task = await _taskService.GetByIdAsync(userId, id, cancellationToken);
 
-        return task is null
-            ? NotFound()
-            : Ok(task);
+        if (task is null)
+        {
+            _logger.LogWarning("Task {TaskId} not found for userId {UserId}", id, userId);
+            return NotFound();
+        }
+
+        _logger.LogInformation("Task {TaskId} retrieved successfully for userId {UserId}", id, userId);
+        return Ok(task);
     }
 
     [HttpGet("GetAll")]
-    public async Task<IActionResult> GetAllTask(
-        CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAllTask(CancellationToken cancellationToken)
     {
         var userId = User.GetUserId();
+        _logger.LogInformation("Fetching all tasks for userId {UserId}", userId);
 
         IReadOnlyList<TaskResponse> taskList = await _taskService.GetAllAsync(userId, cancellationToken);
 
-        return taskList is null || !taskList.Any()
-            ? NotFound() 
-            : Ok(taskList);
+        _logger.LogInformation("Retrieved {Count} tasks for userId {UserId}", taskList?.Count ?? 0, userId);
+
+        return Ok(taskList ?? Array.Empty<TaskResponse>());
     }
 
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> Update(
-        Guid id,
-        [FromBody] UpdateTaskRequest request,
-        CancellationToken cancellationToken)
+    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateTaskRequest request, CancellationToken cancellationToken)
     {
         var userId = User.GetUserId();
+        _logger.LogInformation("Updating task {TaskId} for userId {UserId}", id, userId);
 
-        await _taskService.UpdateAsync(
-            userId,
-            id,
-            request,
-            cancellationToken);
+        await _taskService.UpdateAsync(userId, id, request, cancellationToken);
 
+        _logger.LogInformation("Task {TaskId} updated successfully for userId {UserId}", id, userId);
         return NoContent();
     }
 
     [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> Delete(
-        Guid id,
-        CancellationToken cancellationToken)
+    public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
         var userId = User.GetUserId();
+        _logger.LogInformation("Deleting task {TaskId} for userId {UserId}", id, userId);
 
-        await _taskService.DeleteAsync(
-            userId,
-            id,
-            cancellationToken);
+        await _taskService.DeleteAsync(userId, id, cancellationToken);
 
+        _logger.LogInformation("Task {TaskId} deleted successfully for userId {UserId}", id, userId);
         return NoContent();
     }
 }
