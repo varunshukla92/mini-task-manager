@@ -30,15 +30,15 @@ namespace AuthService.Infrastructure.Services
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.Role)
+                new Claim(ClaimTypes.Role, user.Role),
+                new Claim(JwtRegisteredClaimNames.Aud, _options.Audience)
             };
 
             var expiresAt = DateTime.UtcNow.AddMinutes(_options.ExpiryMinutes);
 
             var token = new JwtSecurityToken(
-                _options.Issuer,
-                _options.Audience,
-                claims,
+                issuer: _options.Issuer,
+                claims: claims,
                 expires: expiresAt,
                 signingCredentials: creds
              );
