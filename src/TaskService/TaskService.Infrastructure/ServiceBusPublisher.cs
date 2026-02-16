@@ -13,7 +13,17 @@ namespace TaskService.Infrastructure
 
         public ServiceBusPublisher(IConfiguration config, ILogger<ServiceBusPublisher> logger)
         {
-            _logger = logger; 
+            _logger = logger;
+
+            _logger.LogInformation("Environment: {Env}",
+    Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"));
+
+            _logger.LogInformation("SB Conn from config: {Value}",
+                config["ServiceBus:ConnectionString"]);
+
+            _logger.LogInformation("SB Conn from ENV directly: {Value}",
+                Environment.GetEnvironmentVariable("ServiceBus__ConnectionString"));
+
 
             var connectionString = config["ServiceBus:ConnectionString"];
             var queueName = config["ServiceBus:QueueName"];
