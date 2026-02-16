@@ -19,12 +19,14 @@ namespace TaskService.Tests.Services
     public class TaskServiceTests
     {
         private readonly Mock<ITaskRepository> _repositoryMock;
+        private readonly Mock<IEventPublisher> _eventPublisherMock;
 
         private readonly TskService taskService;
         public TaskServiceTests()
         {            
             _repositoryMock = new Mock<ITaskRepository>();
-            taskService = new TskService(_repositoryMock.Object);
+            _eventPublisherMock = new Mock<IEventPublisher>();
+            taskService = new TskService(_repositoryMock.Object, _eventPublisherMock.Object);
         }
 
         [Fact]
