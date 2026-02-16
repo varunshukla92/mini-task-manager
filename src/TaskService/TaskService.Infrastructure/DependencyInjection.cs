@@ -25,6 +25,7 @@ namespace TaskService.Infrastructure
                     }));
 
             services.AddScoped<ITaskRepository, TaskRepository>();
+            services.AddSingleton<IEventPublisher, ServiceBusPublisher>();
             return services;
         }
     }

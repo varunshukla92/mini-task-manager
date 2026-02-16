@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TaskService.Application.DTOs;
+using TaskService.Application.Events;
 using TaskService.Application.Exceptions;
 using TaskService.Application.Interfaces;
 using TaskService.Domain.Entities;
@@ -13,10 +14,12 @@ namespace TaskService.Application.Services
     public class TaskService : ITaskService
     {
         private readonly ITaskRepository _repository;
+        private readonly IEventPublisher _publisher;
 
-        public TaskService(ITaskRepository repository)
+        public TaskService(ITaskRepository repository, IEventPublisher publisher)
         {
             _repository = repository;
+            _publisher = publisher;
         }
 
         private static TaskResponse MapToResponse(TaskItem task)
@@ -43,6 +46,15 @@ namespace TaskService.Application.Services
            request.DueDate);
 
             await _repository.AddAsync(task,ct);
+
+            await _publisher.PublishAsync(new TaskCreatedEvent
+            {
+                TaskId = task.Id,
+                CreatedAt = task.CreatedAt,
+                Description = task.Description,
+                Priority = task.Priority,
+                Title = task.Title
+            });
 
             return MapToResponse(task);
         }
