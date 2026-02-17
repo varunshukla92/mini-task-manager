@@ -28,7 +28,7 @@ public class TaskCreatedProcessor
 
         if (taskEvent == null)
         {
-            _logger.LogError("Failed to deserialize TaskCreatedEvent");
+            _logger.LogError("Failed to deserialize TaskCreatedEvent!!");
             return;
         }
 
